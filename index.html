@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>QGIS2leaf webmap</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+		<link rel="stylesheet" type="text/css" href="css/own_style.css">
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	</head>
+	<body>
+		<div id="map"></div>
+		<script>
+		var map = L.map('map', {
+			zoomControl:true, maxZoom:19
+		}).fitBounds([[45.5959868994,8.91283501823],[45.6012003037,8.92523367742]]);
+		var additional_attrib = 'created w. <a href="https://github.com/geolicious/qgis2leaf" target ="_blank">qgis2leaf</a> by <a href="http://www.geolicious.de" target ="_blank">Geolicious</a> & contributors<br>';
+		var feature_group = new L.featureGroup([]);
+		var raster_group = new L.LayerGroup([]);
+		var basemap_0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});
+		basemap_0.addTo(map);
+		var layerOrder=new Array();
+		var overlay_particelle = L.tileLayer.wms('http://www.cartografia.servizirl.it/arcgis/services/catasto/catastoRL/MapServer/WMSServer', {
+			layers: 'particelle',
+			format: 'image/jpeg',
+			transparent: true,
+			continuousWorld : true,
+		}).addTo(map);
+		var overlay_SfondoCTR10000 = L.tileLayer.wms('http://www.cartografia.servizirl.it/arcgis/services/wms/ctr_wms/MapServer/WMSServer', {
+			layers: 'Sfondo C.T.R. 10000',
+			format: 'image/jpeg',
+			transparent: true,
+			continuousWorld : true,
+		}).addTo(map);
+		var overlay_0 = L.tileLayer.wms('http://www.cartografia.regione.lombardia.it/ArcGIS10/services/wms/fisica_wms/MapServer/WMSServer', {
+			layers: '0',
+			format: 'image/jpeg',
+			transparent: true,
+			continuousWorld : true,
+		}).addTo(map);
+		var overlay_foglicomuni = L.tileLayer.wms('http://www.cartografia.servizirl.it/arcgis/services/catasto/catastoRL/MapServer/WMSServer', {
+			layers: 'comuni',
+			format: 'image/jpeg',
+			transparent: true,
+			continuousWorld : true,
+		}).addTo(map);
+		var overlay_comuni = L.tileLayer.wms('http://www.cartografia.servizirl.it/arcgis/services/catasto/catastoRL/MapServer/WMSServer', {
+			layers: 'comuni',
+			format: 'image/jpeg',
+			transparent: true,
+			continuousWorld : true,
+		}).addTo(map);
+		var overlay_ortofoto = L.tileLayer.wms('http://www.cartografia.regione.lombardia.it/ArcGIS10/services/wms/ortofoto2012_wms/MapServer/WMSServer', {
+			layers: 'comuni',
+			format: 'image/jpeg',
+			transparent: true,
+			continuousWorld : true,
+		}).addTo(map);
+
+		feature_group.addTo(map);
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+		};
+		title.update = function () {
+			this._div.innerHTML = '<h2>This is the title</h2>This is the subtitle'
+		};
+		title.addTo(map);
+	var baseMaps = {
+		'OSM Standard': basemap_0
+	};
+
+	var layerOrder=new Array();
+	var overlay_Ortofoto2012AGEA = L.tileLayer.wms('http://www.cartografia.regione.lombardia.it/ArcGIS10/services/wms/ortofoto2012_wms/MapServer/WMSServer', {
+		layers: 'Ortofoto 2012 AGEA',
+		format: 'image/jpeg',
+		transparent: true,
+		continuousWorld : true,
+	}).addTo(map);
+
+		L.control.layers(baseMaps,{"comuni": overlay_comuni,"foglicomuni": overlay_foglicomuni,"0": overlay_0,"SfondoCTR10000": overlay_SfondoCTR10000,"particelle": overlay_particelle,"Ortofoto AGEA 2012":overlay_Ortofoto2012AGEA},{collapsed:false}).addTo(map);
+		L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
+	</script>
+</body>
+</html>
